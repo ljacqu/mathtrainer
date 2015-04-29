@@ -4,18 +4,22 @@
 // ----------------
 // Trainer variables
 // ----------------
-var operators = {
-    'plus':  {sign: "+",    result: function(a,b) { return a+b; }},
-    'minus': {sign: "-",    result: function(a,b) { return a-b; }},
-    'mult':  {sign: "\xD7", result: function(a,b) { return a*b; }},
-   // 'divis': {sign: "\xF7", result: function(a,b) { return a/b; }}
-};
+var operators = [
+/* 0 */ {name: "add", sign: "+",    result: function(a,b) { return a+b; }},
+/* 1 */ {name: "sub", sign: "-",    result: function(a,b) { return a-b; }},
+/* 2 */ {name: "mul", sign: "\xD7", result: function(a,b) { return a*b; }},
+/* 3 */ {name: "div", sign: "\xF7", result: function(a,b) { return a/b; }}
+];
 
 var total   = -1; // how many problems solved
 var minutes =  0; // how many minutes to play
 
+// for subtraction, if min > 0 AND max > 0
+// user can set the option not to have any negative values.
+var avoidNegatives = true;
+
 // array of the index number of the operators the user wants to train
-var useOperators = ['plus', 'minus', 'mult'];//, 'divis'];
+var useOperators = [0, 1, 2, 3];
 
 // Min & max values for the problem
 var min = 1, max = 10;
@@ -36,15 +40,29 @@ function checkUserSubmission() {
 	}
 }
 function makeNewQuestion() {
+        ++total;
 	a = randomInt(min, max);
 	b = randomInt(min, max);
         
-        var operator = useOperators[randomInt(0, useOperators.length-1)];
-        result = operators[operator].result(a, b);
+        var operator = getRandomOperator();
+        if (operator.name === "sub" && avoidNegatives) {
+            var ab = swapBigger(a, b);
+            a = ab[1], b = ab[0];
+            result = a - b;
+        } else if (operator.name === "div") {
+            var mulResult = a * b;
+            result = a, a = mulResult;
+        } else {
+            result = operator.result(a, b);
+        }
 	
-        $("#question").text(a + "\xA0" + operators[operator].sign + "\xA0" + b);
+        $("#question").text(a + "\xA0" + operator.sign + "\xA0" + b);
         $("#result").val("");
-	++total;
+}
+function getRandomOperator() {
+    return operators[
+        useOperators[randomInt(0, useOperators.length-1)]
+    ];
 }
 
 
@@ -72,10 +90,11 @@ function addOptionError(element) {
  */
 function startTrainer() {
     total = -1;
-    $("#options").fadeOut("1s", function() { 
+    $("#options").fadeOut(function() { 
        $("#header").fadeIn();
        $("#user").fadeIn();
     });
+    makeNewQuestion();
 }
 
 
@@ -118,10 +137,7 @@ $(document).ready(function() {
 			options.minmax = swapBigger(options.min, options.max);
 			min = options.minmax[0]; max = options.minmax[1];
 			minutes = options.timer_length;
-			$("#options").fadeOut();
-			$("#header").fadeIn();
-			$("#user").fadeIn();
-			makeNewQuestion();
+                        startTrainer();
 		}
 	});
 	
