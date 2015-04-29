@@ -1,9 +1,8 @@
 "use strict";
-// Requires jQuery
 
-// ----------------
+// ================
 // Trainer variables
-// ----------------
+// ================
 var operators = [
 /* 0 */ {name: "add", sign: "+",    result: function(a,b) { return a+b; }},
 /* 1 */ {name: "sub", sign: "-",    result: function(a,b) { return a-b; }},
@@ -11,8 +10,9 @@ var operators = [
 /* 3 */ {name: "div", sign: "\xF7", result: function(a,b) { return a/b; }}
 ];
 
-var total   = -1; // how many problems solved
-var minutes =  0; // how many minutes to play
+var total   = 0; // how many problems solved
+var skipped = 0; // how many problems skipped
+var minutes = 0; // how many minutes to play
 
 // for subtraction, if min > 0 AND max > 0
 // user can set the option not to have any negative values.
@@ -25,7 +25,7 @@ var useOperators = [0, 1, 2, 3];
 var min = 1, max = 10;
 
 // The question info
-var a, b, result;
+var a=0, b=0, result=0;
 
 // ================
 // Trainer functions
@@ -34,13 +34,17 @@ var a, b, result;
  * Check if the result in the field is correct
  */
 function checkUserSubmission() {
-        var userResult = $("#result").val();
-	if (!isNaN(userResult) && userResult == result) {
-		makeNewQuestion();
+        var userResult = parseInt($("#result").val());
+	if (!isNaN(userResult) && userResult === result) {
+            ++total;
+            makeNewQuestion();
 	}
 }
+function skipQuestion() {
+    ++skipped;
+    makeNewQuestion();
+}
 function makeNewQuestion() {
-        ++total;
 	a = randomInt(min, max);
 	b = randomInt(min, max);
         
@@ -55,9 +59,12 @@ function makeNewQuestion() {
         } else {
             result = operator.result(a, b);
         }
-	
-        $("#question").text(a + "\xA0" + operator.sign + "\xA0" + b);
-        $("#result").val("");
+        updateQuestionText(operator.sign);
+}
+function updateQuestionText(sign) {
+    $("#question").text(a + "\xA0" + sign + "\xA0" + b);
+    $("#result").val("");
+    $("#score").text(total + " answered, " + skipped + " skipped");
 }
 function getRandomOperator() {
     return operators[
@@ -67,34 +74,83 @@ function getRandomOperator() {
 
 
 // ================
-// Options/transitions
+// Functions for options
 // ================
 function getUserOptions() {
+    $("#min, #max, #op_wrapper, #timer_length").removeClass("error");
     $("#options_error").text("");
-    var options = {};
-    $("#options input.input").each(function() {
-        var value = $(this).val(), id = $(this).attr('id');
-        if (isNaN(value)) {
-            addOptionError($(this));
+    setMinMaxOptions();
+    setTimerOption();
+    setUserOperators();
+    if ($("#options .error").size() === 0) {
+        if (min > 0 && $("#avoid_negative").is(":checked")) {
+            avoidNegatives = true;
+        } else {
+            avoidNegatives = false;
         }
+        startTrainer();
+    }
+}
+function setMinMaxOptions() {
+    var min_ = parseInt($("#min").val());
+    var max_ = parseInt($("#max").val());
+    if (isNaN(min_)) {
+        addOptionError("min", "The min field must be a number");
+    } else if (isNaN(max_)) {
+        addOptionError("max", "The max field must be a number");
+    } else {
+        var minmax = swapBigger(min_, max_);
+        min = minmax[0], max = minmax[1];
+    }
+}
+function setTimerOption() {
+    var timerValue = parseInt($("#timer_length").val());
+    if (isNaN(timerValue)) {
+        addOptionError("timer_length", "Please enter a valid number of minutes");
+    } else if (timerValue <= 0) {
+        addOptionError("timer_length", "Please enter a positive number of minutes");
+    } else {
+        minutes = timerValue;
+    }
+}
+function setUserOperators() {
+    // Make sure that the inputIds indices are the same as in window.operators
+    var inputIds = ["#op_add", "#op_sub", "#op_mul", "#op_div"];
+    var inputOperators = [];
+    var count = 0;
+    $.each(inputIds, function() {
+        if ($(this).is(":checked")) inputOperators.push(count);
+        ++count;
     });
-    
+    if (inputOperators.length === 0) {
+        addOptionError("op_wrapper", "Please select at least one operator!");
+    } else {
+        useOperators = inputOperators;
+    }
+}
+function addOptionError(id, message) {
+    $("#options_error").append(message + "<br />");
+    $("#" + id).addClass("error");
 }
 
-function addOptionError(element) {
-    $("#options_error").append("The " + element.attr("name") + " field must be a number!<br />");
-    element.addClass("error");
-}
-/**
- * Transition from the options section to the trainer; initialize trainer.
- */
+// ================
+// Options <-> Trainer transitions
+// ================
 function startTrainer() {
-    total = -1;
+    total   = 0;
+    skipped = 0;
     $("#options").fadeOut(function() { 
        $("#header").fadeIn();
        $("#user").fadeIn();
     });
     makeNewQuestion();
+}
+function quitToOptions() {
+    $("#user").fadeOut(50, function() {
+        $("#header").fadeOut(function() {
+            $("#options").fadeIn();
+        });
+    });
 }
 
 
@@ -110,36 +166,21 @@ function randomInt(min, max) {
 
 $(document).ready(function() {
 	$("#result").keyup(function(e) {
+            if (e.which === 13) {
+                skipQuestion();
+            } else {
 		checkUserSubmission();
+            }
 	});
+        
 	
 	$("#start").click(function() {
-		$("#options_error").text("");
-		var options = {};
-		$("#options input.input").each(function() {
-			var value = $(this).val();
-			var id    = $(this).attr('id');
-			if (isNaN(value)) {
-				$("#options_error").append("The " + id + " field must be a number!");
-				$(this).addClass("error");
-			} else if (id == "timer_length" && value <= 0) {
-				$("#options_error").append("The timer must run for at least 1 minute!");
-				$(this).addClass("error");
-			} else {
-				options[id] = parseInt(value);
-				$(this).removeClass("error");
-			}
-		});
-		
-		if ($("#options .error").size() > 0) {
-			console.log("Found errors!");
-		} else {
-			options.minmax = swapBigger(options.min, options.max);
-			min = options.minmax[0]; max = options.minmax[1];
-			minutes = options.timer_length;
-                        startTrainer();
-		}
+            getUserOptions();
 	});
+        $("#quit_to_options").click(function() {
+                quitToOptions();
+            }
+        );
 	
 	$("#options").fadeIn();
 });
