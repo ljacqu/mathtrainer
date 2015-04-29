@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Math Trainer</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+		<script type="text/javascript" src="trainer.js"></script>
+	</head>
+	<body>
+		<div id="header" style="display: none">
+			<div id="question"></div>
+			<div id="score"></div>
+			<div id="timer"></div>
+		</div>
+		<div id="user" style="display: none">
+			<input type="number" id="result" />
+		</div>
+		<div id="options" style="display: none">
+			<h1>1x1 Trainer</h1>
+			Train basic math questions.
+			<br /><span id="options_error"></span>
+			<br />Run for <input type="number" name="timer length" class="input" min="1" id="timer_length" value="3" /> minutes.
+			<br />Min: <input type="text" name="minimum" class="input" id="min" value="1" />
+			&nbsp; Max: <input type="number" name="maximum" class="input" id="max" value="10" />
+			<br />
+			<br /><input type="submit" id="start" value="Start" />
+		</div>
+	</body>
+</html>
