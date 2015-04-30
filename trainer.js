@@ -35,18 +35,18 @@ var a=0, b=0, result=0;
  */
 function checkUserSubmission() {
         var userResult = parseInt($("#result").val());
-	if (!isNaN(userResult) && userResult === result) {
+    if (!isNaN(userResult) && userResult === result) {
             ++total;
             makeNewQuestion();
-	}
+    }
 }
 function skipQuestion() {
     ++skipped;
     makeNewQuestion();
 }
 function makeNewQuestion() {
-	a = randomInt(min, max);
-	b = randomInt(min, max);
+    a = randomInt(min, max);
+    b = randomInt(min, max);
         
         var operator = getRandomOperator();
         if (operator.name === "sub" && avoidNegatives) {
@@ -79,8 +79,8 @@ function getRandomOperator() {
 function getUserOptions() {
     $("#min, #max, #op_wrapper, #timer_length").removeClass("error");
     $("#options_error").text("");
-    setMinMaxOptions();
     setTimerOption();
+    setMinMaxOptions();
     setUserOperators();
     if ($("#options .error").size() === 0) {
         if (min > 0 && $("#avoid_negative").is(":checked")) {
@@ -190,7 +190,7 @@ function swapBigger(a, b) {
     return (a > b) ? [b, a] : [a, b];
 }
 function randomInt(min, max) {
-	return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 function secondsPadding(seconds) {
     return (seconds >= 10) ? seconds : "0" + seconds;
@@ -200,21 +200,21 @@ function secondsPadding(seconds) {
 // Set event handlers when document is ready
 // ================
 $(document).ready(function() {
-	$("#result").keyup(function(e) {
+    $("#result").keyup(function(e) {
             if (e.which === 13) {
                 skipQuestion();
             } else {
-		checkUserSubmission();
+        checkUserSubmission();
             }
-	});
-        
-	
-	$("#start").click(function() {
+    });
+    
+    $("#start").click(function() {
             getUserOptions();
-	});
-        $("#quit_to_options").click(function() {
-            $("#timer").countdown("stop");
-        });
-	
-	$("#options").fadeIn();
+    });
+
+    $("#quit_to_options").click(function() {
+        $("#timer").countdown("stop");
+    });
+    
+    $("#options").fadeIn();
 });
