@@ -6,11 +6,18 @@
 		<link rel="stylesheet" type="text/css" href="style.css" />
 		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 		<script type="text/javascript" src="trainer.js"></script>
+                <script type="text/javascript" src="timer.js"></script>
 	</head>
 	<body>
+		<div id="score" style="display: none">
+                    <h1>Time Over</h1>
+                    In <span id="score_time">a certain time</span>, you have solved
+                    <span id="score_total">n</span> problems (skipped
+                    <span id="score_skipped">k</span>).
+		</div>
 		<div id="header" style="display: none">
                     <div id="question"></div>
-			<div id="score"></div>
+			<div id="progress"></div>
 			<div id="timer"></div>
 		</div>
 		<div id="user" style="display: none">
@@ -19,17 +26,17 @@
                         <input type="submit" value="Back to options" id="quit_to_options" />
 		</div>
 		<div id="options" style="display: none">
-			<h1>1x1 Trainer</h1>
+			<h1>Mental Math Trainer</h1>
 			Train your mental arithmetic skills
 			<br /><span id="options_error"></span>
 			<br />Run for <input type="number" name="timer length" class="input" min="1" id="timer_length" value="3" /> minutes.
+                        <br />Create problems with numbers in the following range:
 			<br />Min: <input type="number" name="minimum" class="input" id="min" value="1" />
 			&nbsp; Max: <input type="text" name="maximum" class="input" id="max" value="10" />
-			<br />The numbers in the range will be used for arithmetic problems.
                         <br />
                         <br />Avoid negative results for subtraction?
                             <input type="checkbox" id="avoid_negative" checked="checked" />
-                            <span style="font-size: 0.9em">Only applicable if min and max are &gt;= 0</span>
+                            <span style="font-size: 0.9em">Only applicable if min and max aren't negative.</span>
                         <div id="op_wrapper">Include: 
                             <input type="checkbox" id="op_add" checked="checked" /> <label for="op_add">Addition</label>
                             <input type="checkbox" id="op_sub" checked="checked" /> <label for="op_sub">Subtraction</label>

@@ -64,7 +64,7 @@ function makeNewQuestion() {
 function updateQuestionText(sign) {
     $("#question").text(a + "\xA0" + sign + "\xA0" + b);
     $("#result").val("");
-    $("#score").text(total + " answered, " + skipped + " skipped");
+    $("#progress").text(total + " answered, " + skipped + " skipped");
 }
 function getRandomOperator() {
     return operators[
@@ -140,16 +140,45 @@ function startTrainer() {
     total   = 0;
     skipped = 0;
     $("#options").fadeOut(function() { 
-       $("#header").fadeIn();
-       $("#user").fadeIn();
+       $("#header, #user").fadeIn();
     });
+    $("#score").fadeOut();
     makeNewQuestion();
+    startTimer();
 }
-function quitToOptions() {
+function showScore(timeString) {
+    setScoreText(timeString);
+    console.log("ShowScore(" + timeString + ") called");
     $("#user").fadeOut(50, function() {
         $("#header").fadeOut(function() {
-            $("#options").fadeIn();
+            $("#score, #options").fadeIn();
         });
+    });
+}
+function setScoreText(timeString) {
+    if (timeString) {
+        $("#score_time").text(timeString);
+    } else {
+        $("#score_time").text( minutes + " minute" + (minutes !== 1 ? "s" : ""));
+    }
+    $("#score_skipped").text(skipped);
+    $("#score_total").text(total);
+}
+function startTimer() {
+    $("#timer").countdown(new Date().getTime() + minutes*60000)
+    .on("update.countdown", function(event) {
+        $(this).text(event.strftime('%M:%S'));
+    })
+    .on("stoped.countdown", function(event) { //[sic]
+        // Given minutes = 5, if #timer shows "3:45" we want to
+        // display 1:15 in #score, i.e. {5-3-1}:{60-45}
+        var timeElapsed = (event.offset.seconds > 0)
+          ? (minutes - event.offset.minutes - 1) + ":" + secondsPadding(60-event.offset.seconds)
+          : (minutes - event.offset.minutes) + ":00";
+        showScore(timeElapsed);
+    })
+    .on('finish.countdown', function(event) {
+        showScore(false);
     });
 }
 
@@ -163,7 +192,13 @@ function swapBigger(a, b) {
 function randomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+function secondsPadding(seconds) {
+    return (seconds >= 10) ? seconds : "0" + seconds;
+}
 
+// ================
+// Set event handlers when document is ready
+// ================
 $(document).ready(function() {
 	$("#result").keyup(function(e) {
             if (e.which === 13) {
@@ -178,9 +213,8 @@ $(document).ready(function() {
             getUserOptions();
 	});
         $("#quit_to_options").click(function() {
-                quitToOptions();
-            }
-        );
+            $("#timer").countdown("stop");
+        });
 	
 	$("#options").fadeIn();
 });
