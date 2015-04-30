@@ -6,35 +6,35 @@
         <link rel="stylesheet" type="text/css" href="style.css" />
         <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
         <script type="text/javascript" src="trainer.js"></script>
-                <script type="text/javascript" src="timer.js"></script>
+        <script type="text/javascript" src="timer.js"></script>
     </head>
     <body>
+        <div id="question" style="display: none">
+            <div id="question_math"></div>
+            <div id="progress"></div>
+            <div id="timer"></div>
+        </div>
+        <div id="user" style="display: none">
+            <input type="number" id="result" /> 
+            <p>Hit space to skip a question.</p>
+            <input type="submit" value="Back to options" id="quit_to_options" />
+        </div>
         <div id="score" style="display: none">
             <h1>Time Over</h1>
             In <span id="score_time">a certain time</span>, you have solved
             <span id="score_total">n</span> problems (skipped
             <span id="score_skipped">k</span>).
         </div>
-        <div id="header" style="display: none">
-            <div id="question"></div>
-            <div id="progress"></div>
-            <div id="timer"></div>
-        </div>
-        <div id="user" style="display: none">
-            <input type="number" id="result" /> 
-            <p>Hit enter to skip a question.</p>
-            <input type="submit" value="Back to options" id="quit_to_options" />
-        </div>
         <div id="options">
             <h1>Mental Math Trainer</h1>
             Train your mental arithmetic skills
-            <br /><div id="options_error"></div>
-            <br />Run for <input type="number" name="timer length" class="input" min="1" id="timer_length" value="3" /> minutes.
+            <div id="error_wrapper" style="display: none"><span id="options_error"></span></div>
+            <br />Run for <input type="number" name="timer length" min="1" id="timer_length" value="3" /> minutes.
             <br />Create problems with numbers in the following range:
-            <br />Min: <input type="number" name="minimum" class="input" id="min" value="1" />
-            &nbsp; Max: <input type="text" name="maximum" class="input" id="max" value="10" />
+            <br />Min: <input type="number" id="min" value="1" />
+            &nbsp; Max: <input type="number" id="max" value="10" />
             <br />
-            <br />Avoid negative results for subtraction?
+            <br /><label for="avoid_negative">Avoid negative results for subtraction?</label>
             <input type="checkbox" id="avoid_negative" checked="checked" />
             <span style="font-size: 0.9em">Only applicable if min and max aren't negative.</span>
             <div id="op_wrapper">Include: 
@@ -43,7 +43,11 @@
                 <input type="checkbox" id="op_mul" checked="checked" /> <label for="op_mul">Multiplication</label>
                 <input type="checkbox" id="op_div" checked="checked" /> <label for="op_div">Division</label>
             </div>
-            <br /><input type="submit" id="start" value="Start" />
+            <br /><input type="submit" id="start" value="Start" style="display: none" />
         </div>
+        <noscript>
+            <h2>JavaScript Required</h2>
+            <p>JavaScript is required to run this trainer; please enable it in your browser.</p>
+        </noscript>
     </body>
 </html>

@@ -24,7 +24,7 @@ input[type="submit"] {
 input[type="submit"]:hover {
     border-style: inset;
 }
-#question {
+#question_math {
     color: #559;
     font-size: 2em;
     padding: 1em;
@@ -33,7 +33,7 @@ input[type="submit"]:hover {
     border: 1px solid #f00;
 }
 #options_error {
-    color: #930;
+    color: #c30;
 }
 #op_wrapper {
     display: table-cell;

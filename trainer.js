@@ -25,7 +25,7 @@ var useOperators = [0, 1, 2, 3];
 var min = 1, max = 10;
 
 // The question info
-var a=0, b=0, result=0;
+var a = 0, b = 0, result = 0;
 
 // ================
 // Trainer functions
@@ -62,7 +62,7 @@ function makeNewQuestion() {
         updateQuestionText(operator.sign);
 }
 function updateQuestionText(sign) {
-    $("#question").text(a + "\xA0" + sign + "\xA0" + b);
+    $("#question_math").text(a + "\xA0" + sign + "\xA0" + b);
     $("#result").val("");
     $("#progress").text(total + " answered, " + skipped + " skipped");
 }
@@ -83,12 +83,15 @@ function getUserOptions() {
     setMinMaxOptions();
     setUserOperators();
     if ($("#options .error").size() === 0) {
+        $("#error_wrapper").hide();
         if (min > 0 && $("#avoid_negative").is(":checked")) {
             avoidNegatives = true;
         } else {
             avoidNegatives = false;
         }
         startTrainer();
+    } else {
+        $("#error_wrapper").show();
     }
 }
 function setMinMaxOptions() {
@@ -140,7 +143,7 @@ function startTrainer() {
     total   = 0;
     skipped = 0;
     $("#options").fadeOut(function() { 
-       $("#header, #user").fadeIn();
+       $("#question, #user").fadeIn();
     });
     $("#score").fadeOut();
     makeNewQuestion();
@@ -150,7 +153,7 @@ function showScore(timeString) {
     setScoreText(timeString);
     console.log("ShowScore(" + timeString + ") called");
     $("#user").fadeOut(50, function() {
-        $("#header").fadeOut(function() {
+        $("#question").fadeOut(function() {
             $("#score, #options").fadeIn();
         });
     });
@@ -201,11 +204,11 @@ function secondsPadding(seconds) {
 // ================
 $(document).ready(function() {
     $("#result").keyup(function(e) {
-            if (e.which === 13) {
-                skipQuestion();
-            } else {
-        checkUserSubmission();
-            }
+        if (e.which === 32) {
+            skipQuestion();
+        } else {
+            checkUserSubmission();
+        }
     });
     
     $("#start").click(function() {
@@ -216,5 +219,5 @@ $(document).ready(function() {
         $("#timer").countdown("stop");
     });
     
-    $("#options").fadeIn();
+    $("#start").fadeIn();
 });
