@@ -1,13 +1,14 @@
+(function () {
 "use strict";
 
 // ================
 // Trainer variables
 // ================
 var operators = [
-/* 0 */ {name: "add", sign: "+",    result: function(a,b) { return a+b; }},
-/* 1 */ {name: "sub", sign: "-",    result: function(a,b) { return a-b; }},
-/* 2 */ {name: "mul", sign: "\xD7", result: function(a,b) { return a*b; }},
-/* 3 */ {name: "div", sign: "\xF7", result: function(a,b) { return a/b; }}
+    {name: "add", sign: "+",    result: function (a, b) { return a + b; }},
+    {name: "sub", sign: "-",    result: function (a, b) { return a - b; }},
+    {name: "mul", sign: "\xD7", result: function (a, b) { return a * b; }},
+    {name: "div", sign: "\xF7", result: function (a, b) { return a / b; }}
 ];
 
 var total   = 0; // how many problems solved
@@ -34,7 +35,7 @@ var a = 0, b = 0, result = 0;
  * Check if the result in the field is correct
  */
 function checkUserSubmission() {
-        var userResult = parseInt($("#result").val());
+    var userResult = parseInt($("#result").val(), 10);
     if (!isNaN(userResult) && userResult === result) {
             ++total;
             makeNewQuestion();
@@ -51,11 +52,13 @@ function makeNewQuestion() {
         var operator = getRandomOperator();
         if (operator.name === "sub" && avoidNegatives) {
             var ab = swapBigger(a, b);
-            a = ab[1], b = ab[0];
+            a = ab[1];
+            b = ab[0];
             result = a - b;
         } else if (operator.name === "div") {
             var mulResult = a * b;
-            result = a, a = mulResult;
+            result = a;
+            a = mulResult;
         } else {
             result = operator.result(a, b);
         }
@@ -68,7 +71,7 @@ function updateQuestionText(sign) {
 }
 function getRandomOperator() {
     return operators[
-        useOperators[randomInt(0, useOperators.length-1)]
+        useOperators[randomInt(0, useOperators.length - 1)]
     ];
 }
 
@@ -103,7 +106,8 @@ function setMinMaxOptions() {
         addOptionError("max", "The max field must be a number");
     } else {
         var minmax = swapBigger(min_, max_);
-        min = minmax[0], max = minmax[1];
+        min = minmax[0];
+        max = minmax[1];
     }
 }
 function setTimerOption() {
@@ -122,7 +126,9 @@ function setUserOperators() {
     var inputOperators = [];
     var count = 0;
     $.each(inputIds, function() {
-        if ($(this).is(":checked")) inputOperators.push(count);
+        if ($(this).is(":checked")) {
+            inputOperators.push(count);
+        }
         ++count;
     });
     if (inputOperators.length === 0) {
@@ -151,7 +157,6 @@ function startTrainer() {
 }
 function showScore(timeString) {
     setScoreText(timeString);
-    console.log("ShowScore(" + timeString + ") called");
     $("#user").fadeOut(50, function() {
         $("#question").fadeOut(function() {
             $("#score, #options").fadeIn();
@@ -162,25 +167,28 @@ function setScoreText(timeString) {
     if (timeString) {
         $("#score_time").text(timeString);
     } else {
-        $("#score_time").text( minutes + " minute" + (minutes !== 1 ? "s" : ""));
+        $("#score_time").text(minutes + " minute" + (minutes !== 1 ? "s" : ""));
     }
     $("#score_skipped").text(skipped);
     $("#score_total").text(total);
 }
 function startTimer() {
-    $("#timer").countdown(new Date().getTime() + minutes*60000)
-    .on("update.countdown", function(event) {
+    $("#timer").countdown(new Date().getTime() + minutes * 60000)
+    .on("update.countdown", function (event) {
         $(this).text(event.strftime('%M:%S'));
     })
-    .on("stoped.countdown", function(event) { //[sic]
+    .on("stoped.countdown", function (event) { //[sic]
         // Given minutes = 5, if #timer shows "3:45" we want to
         // display 1:15 in #score, i.e. {5-3-1}:{60-45}
-        var timeElapsed = (event.offset.seconds > 0)
-          ? (minutes - event.offset.minutes - 1) + ":" + secondsPadding(60-event.offset.seconds)
-          : (minutes - event.offset.minutes) + ":00";
+        var timeElapsed;
+        if (event.offset.seconds > 0) {
+            timeElapsed = (minutes - event.offset.minutes - 1) + ":" + secondsPadding(60-event.offset.seconds);
+        } else {
+            timeElapsed = (minutes - event.offset.minutes) + ":00";
+        }
         showScore(timeElapsed);
     })
-    .on('finish.countdown', function(event) {
+    .on('finish.countdown', function () {
         showScore(false);
     });
 }
@@ -202,8 +210,8 @@ function secondsPadding(seconds) {
 // ================
 // Set event handlers when document is ready
 // ================
-$(document).ready(function() {
-    $("#result").keyup(function(e) {
+$(document).ready(function () {
+    $("#result").keyup(function (e) {
         if (e.which === 32) {
             skipQuestion();
         } else {
@@ -211,13 +219,14 @@ $(document).ready(function() {
         }
     });
     
-    $("#start").click(function() {
+    $("#start").click(function () {
             getUserOptions();
     });
 
-    $("#quit_to_options").click(function() {
+    $("#quit_to_options").click(function () {
         $("#timer").countdown("stop");
     });
     
     $("#start").fadeIn();
 });
+}());
