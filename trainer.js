@@ -16,7 +16,7 @@
     max: 0,
     minutes: 0,
     avoidNegatives: true,
-    operators: [0, 1, 2, 3]
+    operators: ['add', 'div']
   };
   
   var stats = {
@@ -30,6 +30,7 @@
     result: 0
   };
 
+  var trainer = {};
   // ================
   // Trainer functions
   // ================
@@ -78,7 +79,7 @@
   function updateQuestionText(sign) {
     $('#question_math').text(question.a + '\xA0' + sign + '\xA0' + question.b);
     $('#result').val('');
-    $('#progress').text(stats.total + ' answered, ' + stats.skipped +
+    $('#progress').text(stats.total + ' answered, ' + stats.skipped + 
       ' skipped');
   }
   function getRandomOperator() {
@@ -90,68 +91,149 @@
   // ================
   // Functions for options
   // ================
-  function getUserOptions() {
-    $('#min, #max, #op_wrapper, #timer_length').removeClass('error');
-    $('#options_error').text('');
-    setTimerOption();
-    setMinMaxOptions();
-    setUserOperators();
-    if ($('#options .error').size() === 0) {
-      $('#error_wrapper').hide();
-      if (config.min > 0) {
+  trainer.options = function () {
+    
+    /**
+     * Error functionality.
+     */
+    var error = function () {
+      /** Keeps track if at least one error was added to avoid a DOM lookup. */
+      var errorAdded = false;
+      /**
+       * Displays an error message about a configuration.
+       * @param {String} id The ID of the field/checkbox the error is about
+       * @param {String} message The message to output
+       */
+      var add = function (id, message) {
+        errorAdded = true;
+        $('#options_error').append(message + '<br />');
+        $('#' + id).addClass('optionerror');
+      };
+      /**
+       * Returns whether an error was added since reset() was last called.
+       * @returns {Boolean} True if there is at least one error, false otherwise
+       */
+      var hasErrors = function () {
+        return errorAdded;
+      };
+      /**
+       * Removes all errors and error classes.
+       */
+      var reset = function () {
+        $('#options_error').text('');
+        $('.optionerror').removeClass('optionerror');
+        errorAdded = false;
+      };
+      
+      return {
+        add: add,
+        hasErrors: hasErrors,
+        reset: reset
+      };
+    }();
+    
+    /**
+     * Sets the min and max config parameters, ensuring that min is not greater
+     * than max.
+     * @param {Number} min The minimum number to use (or max)
+     * @param {Number} max The maximum number to use (or min)
+     */
+    var registerMinAndMaxValues = function (min, max) {
+      if (min > max) {
+        var tmp = max;
+        max = min;
+        min = tmp;
+        $('#min').val(min);
+        $('#max').val(max);
+      }
+      config.min = min;
+      config.max = max;
+    };
+    
+    /**
+     * Processes the minimum and maximum option fields.
+     */
+    var setMinAndMax = function () {
+      var min = parseInt($('#min').val());
+      var max = parseInt($('#max').val());
+      if (isNaN(min)) {
+        error.add('min', 'The min field must be a number');
+      } else if (isNaN(max)) {
+        error.add('max', 'The max field must be a number');
+      } else {
+        registerMinAndMaxValues(min, max);
+      }
+    };
+    
+    /**
+     * Processes timer minutes field.
+     */
+    var setMinutes = function () {
+      var timerValue = parseInt($('#timer_length').val());
+      if (isNaN(timerValue)) {
+        error.add('timer_length', 'Please enter a valid number of minutes');
+      } else if (timerValue <= 0) {
+        error.add('timer_length', 'Please enter a positive number of minutes');
+      } else {
+        config.minutes = timerValue;
+      }
+    };
+    
+    /**
+     * Processes the operators the user wants to use for the training session.
+     * Note that the checkboxes in the HTML are expected to have ID #op_{name},
+     * where {name} is the operator abbreviation, e.g. #op_add or #op_div.
+     */
+    var setOperators = function () {
+      var inputOperators = [];
+      for (var key in operators) {
+        if (operators.hasOwnProperty(key)) {
+          if ($('#op_' + key).is(':checked')) {
+            inputOperators.push(key);
+          }
+        }
+      }
+      if (inputOperators.length === 0) {
+        error.add('op_wrapper', 'Please select at least one operator!');
+      } else {
+        config.operators = inputOperators;
+      }
+    };
+    
+    /**
+     * Processes the checkbox to avoid negative results for subtraction.
+     */
+    var setAvoidNegatives = function () {
+      if (config.min >= 0) {
         config.avoidNegatives = $('#avoid_negative').is(':checked');
       } else {
         config.avoidNegatives = false;
       }
-      startTrainer();
-    } else {
-      $('#error_wrapper').show();
-    }
-  }
-  function setMinMaxOptions() {
-    var min = parseInt($('#min').val());
-    var max = parseInt($('#max').val());
-    if (isNaN(min)) {
-      addOptionError('min', 'The min field must be a number');
-    } else if (isNaN(max)) {
-      addOptionError('max', 'The max field must be a number');
-    } else {
-      var minmax = swapBigger(min, max);
-      config.min = minmax[0];
-      config.max = minmax[1];
-    }
-  }
-  function setTimerOption() {
-    var timerValue = parseInt($('#timer_length').val());
-    if (isNaN(timerValue)) {
-      addOptionError('timer_length', 'Please enter a valid number of minutes');
-    } else if (timerValue <= 0) {
-      addOptionError('timer_length', 'Please enter a positive number of ' +
-        'minutes');
-    } else {
-      config.minutes = timerValue;
-    }
-  }
-  function setUserOperators() {
-    // The checkboxes are #op_{name}, e.g. #op_add or #op_div
-    var inputOperators = [];
-    for (var key in operators) {
-      if (operators.hasOwnProperty(key)) {
-        if ($('#op_' + key).is(':checked')) {
-          inputOperators.push(key);
-        }
+    };
+    
+    /**
+     * Initializes the user options.
+     * @returns {Boolean} True if all options are valid and the trainer can be
+     *  started, false if there is an error in the input options.
+     */
+    var initialize = function () {
+      error.reset();
+      setMinutes();
+      setMinAndMax();
+      setOperators();
+      if (error.hasErrors()) {
+        $('#error_wrapper').show();
+        return false;
       }
-    }
-    if (inputOperators.length === 0) {
-      addOptionError('op_wrapper', 'Please select at least one operator!');
-    } else {
-      config.operators = inputOperators;
-    }
-  }
-  function addOptionError(id, message) {
-    $('#options_error').append(message + '<br />');
-    $('#' + id).addClass('error');
-  }
+      $('#error_wrapper').hide();
+      setAvoidNegatives();
+      return true;
+    };
+
+    return {
+      initialize: initialize
+    };
+  }();
 
   // ================
   // Options <-> Trainer transitions
@@ -234,7 +316,10 @@
     });
 
     $('#start').click(function () {
-      getUserOptions();
+      var hasValidOptions = trainer.options.initialize();
+      if (hasValidOptions) {
+        startTrainer();
+      }
     });
 
     $('#quit_to_options').click(function () {
