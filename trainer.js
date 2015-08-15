@@ -4,29 +4,31 @@
   // ================
   // Trainer variables
   // ================
-  var operators = [
-    {name: 'add', sign: '+',    result: function (a, b) { return a + b; }},
-    {name: 'sub', sign: '-',    result: function (a, b) { return a - b; }},
-    {name: 'mul', sign: '\xD7', result: function (a, b) { return a * b; }},
-    {name: 'div', sign: '\xF7', result: function (a, b) { return a / b; }}
-  ];
-
-  var total   = 0; // how many problems solved
-  var skipped = 0; // how many problems skipped
-  var minutes = 0; // how many minutes to play
-
-  // for subtraction, if min > 0 AND max > 0
-  // user can set the option not to have any negative values.
-  var avoidNegatives = true;
-
-  // array of the index number of the operators the user wants to train
-  var useOperators = [0, 1, 2, 3];
-
-  // Min & max values for the problem
-  var min = 1, max = 10;
-
-  // The question info
-  var a = 0, b = 0, result = 0;
+  var operators = {
+    add: {name: 'add', sign: '+',    result: function (a, b) { return a + b; }},
+    sub: {name: 'sub', sign: '-',    result: function (a, b) { return a - b; }},
+    mul: {name: 'mul', sign: '\xD7', result: function (a, b) { return a * b; }},
+    div: {name: 'div', sign: '\xF7', result: function (a, b) { return a / b; }}
+  };
+  
+  var config = {
+    min: 0,
+    max: 0,
+    minutes: 0,
+    avoidNegatives: true,
+    operators: [0, 1, 2, 3]
+  };
+  
+  var stats = {
+    total: 0,
+    skipped: 0
+  };
+  
+  var question = {
+    a: 0,
+    b: 0,
+    result: 0
+  };
 
   // ================
   // Trainer functions
@@ -37,8 +39,8 @@
    */
   function checkUserSubmission() {
     var userResult = parseInt($('#result').val(), 10);
-    if (!isNaN(userResult) && userResult === result) {
-      ++total;
+    if (!isNaN(userResult) && userResult === question.result) {
+      ++stats.total;
       createNewQuestion();
     }
   }
@@ -46,42 +48,44 @@
    * Allows a question to be skipped; a new question will be created.
    */
   function skipQuestion() {
-    ++skipped;
+    ++stats.skipped;
     createNewQuestion();
   }
   /**
    * Creates a new question (updates the variables accordingly).
    */
   function createNewQuestion() {
-    a = randomInt(min, max);
-    b = randomInt(min, max);
+    var a = randomInt(config.min, config.max);
+    var b = randomInt(config.min, config.max);
 
     var operator = getRandomOperator();
-    if (operator.name === 'sub' && avoidNegatives) {
+    if (operator.name === 'sub' && config.avoidNegatives) {
       var ab = swapBigger(a, b);
       a = ab[1];
       b = ab[0];
-      result = a - b;
+      question.result = a - b;
     } else if (operator.name === 'div') {
       var mulResult = a * b;
-      result = a;
+      question.result = a;
       a = mulResult;
     } else {
-      result = operator.result(a, b);
+      question.result = operator.result(a, b);
     }
+    question.a = a;
+    question.b = b;
     updateQuestionText(operator.sign);
   }
   function updateQuestionText(sign) {
-    $('#question_math').text(a + '\xA0' + sign + '\xA0' + b);
+    $('#question_math').text(question.a + '\xA0' + sign + '\xA0' + question.b);
     $('#result').val('');
-    $('#progress').text(total + ' answered, ' + skipped + ' skipped');
+    $('#progress').text(stats.total + ' answered, ' + stats.skipped +
+      ' skipped');
   }
   function getRandomOperator() {
     return operators[
-      useOperators[randomInt(0, useOperators.length - 1)]
+      config.operators[randomInt(0, config.operators.length - 1)]
     ];
   }
-
 
   // ================
   // Functions for options
@@ -94,10 +98,10 @@
     setUserOperators();
     if ($('#options .error').size() === 0) {
       $('#error_wrapper').hide();
-      if (min > 0 && $('#avoid_negative').is(':checked')) {
-        avoidNegatives = true;
+      if (config.min > 0) {
+        config.avoidNegatives = $('#avoid_negative').is(':checked');
       } else {
-        avoidNegatives = false;
+        config.avoidNegatives = false;
       }
       startTrainer();
     } else {
@@ -105,16 +109,16 @@
     }
   }
   function setMinMaxOptions() {
-    var min_ = parseInt($('#min').val());
-    var max_ = parseInt($('#max').val());
-    if (isNaN(min_)) {
+    var min = parseInt($('#min').val());
+    var max = parseInt($('#max').val());
+    if (isNaN(min)) {
       addOptionError('min', 'The min field must be a number');
-    } else if (isNaN(max_)) {
+    } else if (isNaN(max)) {
       addOptionError('max', 'The max field must be a number');
     } else {
-      var minmax = swapBigger(min_, max_);
-      min = minmax[0];
-      max = minmax[1];
+      var minmax = swapBigger(min, max);
+      config.min = minmax[0];
+      config.max = minmax[1];
     }
   }
   function setTimerOption() {
@@ -125,39 +129,38 @@
       addOptionError('timer_length', 'Please enter a positive number of ' +
         'minutes');
     } else {
-      minutes = timerValue;
+      config.minutes = timerValue;
     }
   }
   function setUserOperators() {
-    // Make sure that the inputIds indices are the same as in operators
-    var inputIds = ['#op_add', '#op_sub', '#op_mul', '#op_div'];
+    // The checkboxes are #op_{name}, e.g. #op_add or #op_div
     var inputOperators = [];
-    var count = 0;
-    $.each(inputIds, function() {
-      if ($(this).is(':checked')) {
-        inputOperators.push(count);
+    for (var key in operators) {
+      if (operators.hasOwnProperty(key)) {
+        if ($('#op_' + key).is(':checked')) {
+          inputOperators.push(key);
+        }
       }
-      ++count;
-    });
+    }
     if (inputOperators.length === 0) {
       addOptionError('op_wrapper', 'Please select at least one operator!');
     } else {
-      useOperators = inputOperators;
+      config.operators = inputOperators;
     }
   }
   function addOptionError(id, message) {
-      $('#options_error').append(message + '<br />');
-      $('#' + id).addClass('error');
+    $('#options_error').append(message + '<br />');
+    $('#' + id).addClass('error');
   }
 
   // ================
   // Options <-> Trainer transitions
   // ================
   function startTrainer() {
-    total   = 0;
-    skipped = 0;
+    stats.total = 0;
+    stats.skipped = 0;
     $('#options').fadeOut(function() { 
-       $('#question, #user').fadeIn();
+      $('#question, #user').fadeIn();
     });
     $('#score').fadeOut();
     createNewQuestion();
@@ -175,30 +178,32 @@
     if (timeString) {
       $('#score_time').text(timeString);
     } else {
-      $('#score_time').text(minutes + ' minute' + (minutes !== 1 ? 's' : ''));
+      $('#score_time').text(config.minutes + ' minute' + 
+        (config.minutes !== 1 ? 's' : ''));
     }
-    $('#score_skipped').text(skipped);
-    $('#score_total').text(total);
+    $('#score_skipped').text(stats.skipped);
+    $('#score_total').text(stats.total);
   }
   function startTimer() {
-    $('#timer').countdown(new Date().getTime() + minutes * 60000)
+    $('#timer').countdown(new Date().getTime() + config.minutes * 60000)
     .on('update.countdown', function (event) {
-        $(this).text(event.strftime('%M:%S'));
+      $(this).text(event.strftime('%M:%S'));
     })
-    .on('stoped.countdown', function (event) { //[sic]
+    // sic: the event is mistyped
+    .on('stoped.countdown', function (event) {
       // Given minutes = 5, if #timer shows "3:45" we want to
       // display 1:15 in #score, i.e. {5-3-1}:{60-45}
       var timeElapsed;
       if (event.offset.seconds > 0) {
-        timeElapsed = (minutes - event.offset.minutes - 1) + ':' +
-          secondsPadding(60-event.offset.seconds);
+        timeElapsed = (config.minutes - event.offset.minutes - 1) + ':' +
+          secondsPadding(60 - event.offset.seconds);
       } else {
-        timeElapsed = (minutes - event.offset.minutes) + ':00';
+        timeElapsed = (config.minutes - event.offset.minutes) + ':00';
       }
       showScore(timeElapsed);
     })
     .on('finish.countdown', function () {
-      showScore(false);
+      showScore();
     });
   }
 
