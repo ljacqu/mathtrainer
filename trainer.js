@@ -126,6 +126,7 @@
       var userResult = parseInt($('#result').val());
       if (!isNaN(userResult) && userResult === question.result) {
         ++stats.total;
+        (new Audio('correct.mp3')).play();
         createNew();
       }
     };
@@ -383,6 +384,8 @@
     $('#result').keyup(function (e) {
       if (e.which === 32) {
         trainer.question.skip();
+      } else if (e.which === 27) {
+        $(this).val('');
       } else {
         trainer.question.verifyAndContinue();
       }
