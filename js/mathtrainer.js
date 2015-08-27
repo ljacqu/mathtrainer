@@ -80,8 +80,7 @@
 			$('#result').val('');
 			$('#question_math').text(question.a + '\xA0' + sign + '\xA0' +
 				question.b);
-			$('#progress').text(stats.total + ' answered, ' + stats.skipped +
-				' skipped');
+			$('#progress').text(i18n.t('messages.score', {total: stats.total, skipped: stats.skipped}));
 		};
 
 		/**
@@ -207,9 +206,9 @@
 			var min = parseInt($('#min').val());
 			var max = parseInt($('#max').val());
 			if (isNaN(min)) {
-				error.add('min', 'The min field must be a number');
+				error.add('min', i18n.t('errors.rangeMinInvalid'));
 			} else if (isNaN(max)) {
-				error.add('max', 'The max field must be a number');
+				error.add('max', i18n.t('errors.rangeMaxInvalid'));
 			} else {
 				registerMinAndMaxValues(min, max);
 			}
@@ -221,9 +220,9 @@
 		var initializeMinutes = function () {
 			var timerValue = parseInt($('#timer_length').val());
 			if (isNaN(timerValue)) {
-				error.add('timer_length', 'Please enter a valid number of minutes');
+				error.add('timer_length', i18n.t('errors.minInvalid'));
 			} else if (timerValue <= 0) {
-				error.add('timer_length', 'Please enter a positive number of minutes');
+				error.add('timer_length', i18n.t('errors.minNotPositive'));
 			} else {
 				config.minutes = timerValue;
 			}
@@ -244,7 +243,7 @@
 				}
 			}
 			if (inputOperators.length === 0) {
-				error.add('op_wrapper', 'Please select at least one operator!');
+				error.add('op_wrapper', i18n.t('errors.noOperators'));
 			} else {
 				config.operators = inputOperators;
 			}
@@ -295,14 +294,12 @@
 		 *  timer was canceled
 		 */
 		var setScoreText = function (timeString) {
-			if (timeString) {
-				$('#score_time').text(timeString);
-			} else {
-				$('#score_time').text(config.minutes + ' minute' +
-					(config.minutes !== 1 ? 's' : ''));
+			if(!timeString) {
+				timeString = config.minutes + ' minute' + (config.minutes !== 1 ? 's' : '');
 			}
-			$('#score_skipped').text(stats.skipped);
-			$('#score_total').text(stats.total);
+			$('#finalScore').text(
+				i18n.t('messages.finalScore', { scoreTime: timeString, scoreTotal: stats.total, scoreSkipped: stats.skipped })
+			);
 		};
 
 		/**
@@ -378,9 +375,15 @@
 	}();
 
 	/* ***********
-	 * Set event handlers once the document is ready
+	 * Set event handlers and translation once the document is ready
 	 * *********** */
 	$(document).ready(function () {
+
+		i18n.init(function(err, t) {
+			$('.i18n').i18n();
+			document.title = t('labels.appName');
+		});
+
 		$('#result').keyup(function (e) {
 			if (e.which === 32) {
 				trainer.question.skip();

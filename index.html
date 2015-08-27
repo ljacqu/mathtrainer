@@ -3,13 +3,14 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Math Trainer</title>
+		<title></title>
 
 		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/mathtrainer.css" />
 
 		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/i18next.min.js"></script>
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="js/jquery.countdown.min.js"></script>
 		<script type="text/javascript" src="js/mathtrainer.js"></script>
@@ -18,14 +19,14 @@
 		<div class="container-fluid">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
-					<h1>Mental Math Trainer</h1>
-					Train your mental arithmetic skills.
+					<h1 class="i18n" data-i18n="labels.appName"></h1>
+					<span class="i18n" data-i18n="labels.appQuote"></span>
 				</div>
 				<div class="panel-body">
 
 					<div class="alert alert-success" id="score" style="display: none">
-						<strong>Time Over</strong><br>
-						In <span id="score_time">a certain time</span>, you have solved <span id="score_total">n</span> problems (skipped <span id="score_skipped">k</span>).
+						<strong class="i18n" data-i18n="labels.timeOver"></strong><br>
+						<span id="finalScore"></span>
 					</div>
 
 					<form id="options">
@@ -36,21 +37,21 @@
 						</div>
 						<div class="form-group">
 							<div class="input-group">
-								<span class="input-group-addon">Run for</span>
+								<span class="input-group-addon i18n" data-i18n="labels.runFor"></span>
 								<input type="number" class="form-control" name="timer length" min="1" id="timer_length" value="3" />
-								<span class="input-group-addon">minutes.</span>
+								<span class="input-group-addon i18n" data-i18n="labels.minutes">.</span>
 							</div>   
 						</div>
 						<div class="form-group">
 							<div class="input-group">
-								Create problems with numbers in the following range:
+								<span class="i18n" data-i18n="labels.problemsRange"></span>
 							</div>
 							<div class="input-group">
-								<span class="input-group-addon">Min</span>
+								<span class="input-group-addon i18n" data-i18n="labels.rangeMin"></span>
 								<input type="number" class="form-control" id="min" value="1" />
 							</div>
 							<div class="input-group">
-								<span class="input-group-addon">Max</span>
+								<span class="input-group-addon i18n" data-i18n="labels.rangeMax"></span>
 								<input type="number" class="form-control" id="max" value="10" />
 							</div>
 						</div>
@@ -58,38 +59,40 @@
 							<div class="checkbox">
 								<label>
 									<input type="checkbox" id="avoid_negative" checked="checked" />
-									Avoid negative results for subtraction? <small>(Only applicable if min and max aren't negative.)</small>
+									<span class="i18n" data-i18n="labels.avoidNegatives"></span>
+									<small class="i18n" data-i18n="labels.avoidNegativesExp"></small>
 								</label>
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="checkbox">
 								<label>
-									<input type="checkbox" id="op_add" checked="checked" />
-									Addition
+									<input type="checkbox"  id="op_add" checked="checked" />
+									<span class="i18n"data-i18n="labels.opAdd"></span>
 								 </label>
 							</div>
 							<div class="checkbox">
 								<label>
 									<input type="checkbox" id="op_sub" checked="checked" />
-									Subtraction
+									<span class="i18n"data-i18n="labels.opSub"></span>
 								 </label>
 							</div>
 							<div class="checkbox">
 								<label>
 									<input type="checkbox" id="op_mul" checked="checked" />
-									Multiplication
+									<span class="i18n"data-i18n="labels.opMul"></span>
 								 </label>
 							</div>
 							<div class="checkbox">
 								<label>
 									<input type="checkbox" id="op_div" checked="checked" />
-									Division
+									<span class="i18n" data-i18n="labels.opDiv"></span>
 								 </label>
 							</div>
 						</div>
 						<div class="form-group">
-							<button type="button" class="btn btn-primary" id="start" style="display: none">Start</button>
+							<button type="button" class="btn btn-primary i18n" id="start" style="display: none" data-i18n="labels.start">
+							</button>
 						</div>
 					</form>
 
@@ -111,13 +114,14 @@
 							<div class="col-xs-12 text-center">
 								<div id="user">
 									<input type="number" class="form-control" id="result" />
-									<p><small>Hit space to skip a question.</small></p>
+									<p><small class="i18n" data-i18n="labels.skipQuestion"></small></p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-xs-12 text-center">
-							   <button type="button" class="btn btn-danger" id="quit_to_options">Quit to Options</button>
+							   <button type="button" class="btn btn-danger i18n" id="quit_to_options" data-i18n="labels.quitToOptions">
+							   </button>
 							</div>
 						</div>
 					</div>
