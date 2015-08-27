@@ -1,53 +1,129 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8" />
-        <title>Math Trainer</title>
-        <link rel="stylesheet" type="text/css" href="style.css" />
-        <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-        <script type="text/javascript" src="trainer.js"></script>
-        <script type="text/javascript" src="timer.js"></script>
-    </head>
-    <body>
-        <div id="question" style="display: none">
-            <div id="question_math"></div>
-            <div id="progress"></div>
-            <div id="timer"></div>
-        </div>
-        <div id="user" style="display: none">
-            <input type="number" id="result" /> 
-            <p>Hit space to skip a question.</p>
-            <input type="submit" value="Back to options" id="quit_to_options" />
-        </div>
-        <div id="score" style="display: none">
-            <h1>Time Over</h1>
-            In <span id="score_time">a certain time</span>, you have solved
-            <span id="score_total">n</span> problems (skipped
-            <span id="score_skipped">k</span>).
-        </div>
-        <div id="options">
-            <h1>Mental Math Trainer</h1>
-            Train your mental arithmetic skills
-            <div id="error_wrapper" style="display: none"><span id="options_error"></span></div>
-            <br />Run for <input type="number" name="timer length" min="1" id="timer_length" value="3" /> minutes.
-            <br />Create problems with numbers in the following range:
-            <br />Min: <input type="number" id="min" value="1" />
-            &nbsp; Max: <input type="number" id="max" value="10" />
-            <br />
-            <br /><label for="avoid_negative">Avoid negative results for subtraction?</label>
-            <input type="checkbox" id="avoid_negative" checked="checked" />
-            <span style="font-size: 0.9em">Only applicable if min and max aren't negative.</span>
-            <div id="op_wrapper">Include: 
-                <input type="checkbox" id="op_add" checked="checked" /> <label for="op_add">Addition</label>
-                <input type="checkbox" id="op_sub" checked="checked" /> <label for="op_sub">Subtraction</label>
-                <input type="checkbox" id="op_mul" checked="checked" /> <label for="op_mul">Multiplication</label>
-                <input type="checkbox" id="op_div" checked="checked" /> <label for="op_div">Division</label>
-            </div>
-            <br /><input type="submit" id="start" value="Start" style="display: none" />
-        </div>
-        <noscript>
-            <h2>JavaScript Required</h2>
-            <p>JavaScript is required to run this trainer; please enable it in your browser.</p>
-        </noscript>
-    </body>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Math Trainer</title>
+
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/mathtrainer.css" />
+
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="timer.js"></script>
+		<script type="text/javascript" src="trainer.js"></script>
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h1>Mental Math Trainer</h1>
+					Train your mental arithmetic skills.
+				</div>
+				<div class="panel-body">
+
+					<div class="alert alert-success" id="score" style="display: none">
+						<strong>Time Over</strong><br>
+						In <span id="score_time">a certain time</span>, you have solved <span id="score_total">n</span> problems (skipped <span id="score_skipped">k</span>).
+					</div>
+
+					<form id="options">
+						<div class="form-group">
+							<div class="alert alert-danger" id="error_wrapper" style="display: none">
+								<span id="options_error"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-group">
+								<span class="input-group-addon">Run for</span>
+								<input type="number" class="form-control" name="timer length" min="1" id="timer_length" value="3" />
+								<span class="input-group-addon">minutes.</span>
+							</div>   
+						</div>
+						<div class="form-group">
+							<div class="input-group">
+								Create problems with numbers in the following range:
+							</div>
+							<div class="input-group">
+								<span class="input-group-addon">Min</span>
+								<input type="number" class="form-control" id="min" value="1" />
+							</div>
+							<div class="input-group">
+								<span class="input-group-addon">Max</span>
+								<input type="number" class="form-control" id="max" value="10" />
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" id="avoid_negative" checked="checked" />
+									Avoid negative results for subtraction? <small>(Only applicable if min and max aren't negative.)</small>
+								</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" id="op_add" checked="checked" />
+									Addition
+								 </label>
+							</div>
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" id="op_sub" checked="checked" />
+									Subtraction
+								 </label>
+							</div>
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" id="op_mul" checked="checked" />
+									Multiplication
+								 </label>
+							</div>
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" id="op_div" checked="checked" />
+									Division
+								 </label>
+							</div>
+						</div>
+						<div class="form-group">
+							<button type="button" class="btn btn-primary" id="start" style="display: none">Start</button>
+						</div>
+					</form>
+
+					<div id="question" style="display: none">
+						<div class="row">
+							<div class="col-xs-2">
+								<big><div id="timer"></div></big>
+							</div>
+							<div class="col-xs-10 text-right">
+								<big><div id="progress"></div></big>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 text-center">
+								<h1 id="question_math"></h1>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 text-center">
+								<div id="user">
+									<input type="number" class="form-control" id="result" />
+									<p><small>Hit space to skip a question.</small></p>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 text-center">
+							   <button type="button" class="btn btn-danger" id="quit_to_options">Quit to Options</button>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</body>
 </html>
