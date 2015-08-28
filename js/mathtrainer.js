@@ -203,13 +203,27 @@
 		 * Processes the minimum and maximum option fields.
 		 */
 		var initializeMinAndMax = function () {
+
 			var min = parseInt($('#min').val());
 			var max = parseInt($('#max').val());
-			if (isNaN(min)) {
-				error.add('min', i18n.t('errors.rangeMinInvalid'));
-			} else if (isNaN(max)) {
-				error.add('max', i18n.t('errors.rangeMaxInvalid'));
-			} else {
+			var hasErrors = false;
+
+			if (isNaN(min) || min < -9999999 || min > 9999999) {
+				error.add('min', i18n.t('errors.rangeMinInvalid', {min: -9999999, max: 9999999}));
+				hasErrors = true;
+			}
+
+			if (isNaN(max) || max < -9999999 || max > 9999999) {
+				error.add('max', i18n.t('errors.rangeMaxInvalid', {min: -9999999, max: 9999999}));
+				hasErrors = true;
+			}
+
+			if (!hasErrors && min >= max) {
+				error.add('max', i18n.t('errors.rangeIntervalInvalid'));
+				hasErrors = true;
+			}
+
+			if (!hasErrors) {
 				registerMinAndMaxValues(min, max);
 			}
 		};
@@ -219,10 +233,8 @@
 		 */
 		var initializeMinutes = function () {
 			var timerValue = parseInt($('#timer_length').val());
-			if (isNaN(timerValue)) {
-				error.add('timer_length', i18n.t('errors.minInvalid'));
-			} else if (timerValue <= 0) {
-				error.add('timer_length', i18n.t('errors.minNotPositive'));
+			if (isNaN(timerValue) || timerValue <= 0 || timerValue > 60) {
+				error.add('timer_length', i18n.t('errors.minutesInvalid', {min: 1, max: 60}));
 			} else {
 				config.minutes = timerValue;
 			}
@@ -382,6 +394,11 @@
 		i18n.init(function(err, t) {
 			$('.i18n').i18n();
 			document.title = t('labels.appName');
+		});
+
+		$("input[type=number]").change(function(e) {
+			var value = parseInt($(this).val());
+			$(this).val(!isNaN(value) ? value : $(this).prop("defaultValue"));
 		});
 
 		$('#result').keyup(function (e) {

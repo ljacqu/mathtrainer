@@ -23,10 +23,10 @@
 		"finalScore" : "In __scoreTime__, you have solved __scoreTotal__ problems (skipped __scoreSkipped__)"
 	},
 	"errors": {
-		"rangeMinInvalid" : "The min field must be a number",
-		"rangeMaxInvalid" : "The max field must be a number",
-		"minInvalid"      : "Please enter a valid number of minutes",
-		"minNotPositive"  : "Please enter a positive number of minutes",
-		"noOperators"     : "Please select at least one operator!"
+		"minutesInvalid"	   : "The \"minutes\" field must be a valid integer between __min__ and __max__",
+		"rangeMinInvalid"      : "The \"Min\" field must be a valid number between __min__ and __max__",
+		"rangeMaxInvalid"      : "The \"Max\" field must be a valid number between __min__ and __max__",
+		"rangeIntervalInvalid" : "The \"Min\" field must be less than \"Max\" field",
+		"noOperators"          : "Select at least one operator"
 	}
 }
