@@ -6,3 +6,11 @@
 .container-fluid {
 	padding-top: 15px;
 }
+
+input.optionerror {
+	border-color: #a94442;
+}
+
+div.optionerror {
+	border: 1px solid #a94442;
+}

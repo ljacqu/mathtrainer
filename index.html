@@ -64,7 +64,7 @@
 								</label>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="form-group" id="op_wrapper">
 							<div class="checkbox">
 								<label>
 									<input type="checkbox"  id="op_add" checked="checked" />
@@ -91,7 +91,9 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<button type="button" class="btn btn-primary i18n col-xs-12" id="start" style="display: none" data-i18n="labels.start">
+							<button type="button" class="btn btn-primary col-xs-12" id="start" style="display: none">
+								<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+								<span class="i18n" data-i18n="labels.start"></span>
 							</button>
 						</div>
 					</form>
@@ -120,16 +122,25 @@
 						</div>
 						<div class="row">
 							<div class="col-xs-6 text-center">
-								<button type="button" class="btn btn-info i18n col-xs-12" id="clear_question" data-i18n="labels.clear"/>
+								<button type="button" class="btn btn-info col-xs-12" id="clear_question">
+									<span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
+									<span class="i18n" data-i18n="labels.clear"></span>
+								</button>
 							</div>
 							<div class="col-xs-6 text-center">
-								<button type="button" class="btn btn-warning i18n col-xs-12" id="skip_question" data-i18n="labels.skip"/>
+								<button type="button" class="btn btn-warning col-xs-12" id="skip_question">
+									<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+									<span class="i18n" data-i18n="labels.skip"></span>
+								</button>
 							</div>
 						</div>
 						<br>
 						<div class="row">
 							<div class="col-xs-12 text-center">
-							   <button type="button" class="btn btn-danger i18n col-xs-12" id="quit_to_options" data-i18n="labels.quitToOptions"/>
+							   <button type="button" class="btn btn-danger col-xs-12" id="quit_to_options">
+								   	<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+									<span class="i18n" data-i18n="labels.quitToOptions"></span>
+								</button>
 							</div>
 						</div>
 					</div>

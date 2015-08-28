@@ -159,10 +159,14 @@
 			 * @param {String} id The ID of the field/checkbox the error is about
 			 * @param {String} message The message to output
 			 */
-			var add = function (id, message) {
+			var add = function (ids, message) {
 				errorAdded = true;
-				$('#options_error').append(message + '<br />');
-				$('#' + id).addClass('optionerror');
+				var errorDiv = $('<div class="errormessage"><span class="glyphicon glyphicon-warning-sign"></span> </div>');
+				errorDiv.append(message);
+				$('#options_error').append(errorDiv);
+				$.each(ids, function (key, value) {
+					$('#' + value).addClass('optionerror');
+				});
 			};
 			/**
 			 * Returns whether an error was added since reset() was last called.
@@ -215,17 +219,17 @@
 			var hasErrors = false;
 
 			if (isNaN(min) || min < -9999999 || min > 9999999) {
-				error.add('min', i18n.t('errors.rangeMinInvalid', {min: -9999999, max: 9999999}));
+				error.add(['min'], i18n.t('errors.rangeMinInvalid', {min: -9999999, max: 9999999}));
 				hasErrors = true;
 			}
 
 			if (isNaN(max) || max < -9999999 || max > 9999999) {
-				error.add('max', i18n.t('errors.rangeMaxInvalid', {min: -9999999, max: 9999999}));
+				error.add(['max'], i18n.t('errors.rangeMaxInvalid', {min: -9999999, max: 9999999}));
 				hasErrors = true;
 			}
 
 			if (!hasErrors && min >= max) {
-				error.add('max', i18n.t('errors.rangeIntervalInvalid'));
+				error.add(['min', 'max'], i18n.t('errors.rangeIntervalInvalid'));
 				hasErrors = true;
 			}
 
@@ -240,7 +244,7 @@
 		var initializeMinutes = function () {
 			var timerValue = parseInt($('#timer_length').val());
 			if (isNaN(timerValue) || timerValue <= 0 || timerValue > 60) {
-				error.add('timer_length', i18n.t('errors.minutesInvalid', {min: 1, max: 60}));
+				error.add(['timer_length'], i18n.t('errors.minutesInvalid', {min: 1, max: 60}));
 			} else {
 				config.minutes = timerValue;
 			}
@@ -261,7 +265,7 @@
 				}
 			}
 			if (inputOperators.length === 0) {
-				error.add('op_wrapper', i18n.t('errors.noOperators'));
+				error.add(['op_wrapper'], i18n.t('errors.noOperators'));
 			} else {
 				config.operators = inputOperators;
 			}
