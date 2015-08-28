@@ -16,6 +16,8 @@
 		"opDiv"             : "Divisão",
 		"start"             : "Iniciar",
 		"skipQuestion"      : "Pressione espaço para pular o problema",
+		"skip"              : "Pular",
+		"clear"             : "Limpar",
 		"quitToOptions"     : "Voltar para as Opções"
 	},
 	"messages": {

@@ -419,6 +419,16 @@
 			}
 		});
 
+		$('#skip_question').click(function () {
+			trainer.question.skip();
+			$("#result").focus();
+		});
+
+		$('#clear_question').click(function () {
+			$("#result").val('');
+			$("#result").focus();
+		});
+
 		$('#quit_to_options').click(function () {
 			$('#timer').countdown('stop');
 		});

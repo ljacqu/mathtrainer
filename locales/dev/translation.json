@@ -16,6 +16,8 @@
 		"opDiv"             : "Division",
 		"start"             : "Start",
 		"skipQuestion"      : "Hit space to skip a question",
+		"skip"              : "Skip",
+		"clear"             : "Clear",
 		"quitToOptions"     : "Quit to Options"
 	},
 	"messages": {
