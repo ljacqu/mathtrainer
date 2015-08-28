@@ -15,9 +15,9 @@
 		"opMul"             : "Multiplication",
 		"opDiv"             : "Division",
 		"start"             : "Start",
-		"skipQuestion"      : "Hit space to skip a question",
-		"skip"              : "Skip",
+		"skipClearQuestion" : "esc to clear / space to skip",
 		"clear"             : "Clear",
+		"skip"              : "Skip",
 		"quitToOptions"     : "Quit to Options"
 	},
 	"messages": {

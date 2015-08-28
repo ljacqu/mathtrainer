@@ -15,9 +15,9 @@
 		"opMul"             : "Multiplicação",
 		"opDiv"             : "Divisão",
 		"start"             : "Iniciar",
-		"skipQuestion"      : "Pressione espaço para pular o problema",
-		"skip"              : "Pular",
+		"skipClearQuestion" : "esc para limpar / espaço para pular",
 		"clear"             : "Limpar",
+		"skip"              : "Pular",
 		"quitToOptions"     : "Voltar para as Opções"
 	},
 	"messages": {
