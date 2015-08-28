@@ -45,6 +45,11 @@
 		result: 0
 	};
 
+	/**
+	 * Audio to play on correct answers.
+	 */
+	var correctAudio = new Audio('correct.mp3');
+
 	/** Trainer logic. */
 	var trainer = {};
 
@@ -125,7 +130,8 @@
 			var userResult = parseInt($('#result').val());
 			if (!isNaN(userResult) && userResult === question.result) {
 				++stats.total;
-				(new Audio('correct.mp3')).play();
+				correctAudio.currentTime = 0;
+				correctAudio.play();
 				createNew();
 			}
 		};
