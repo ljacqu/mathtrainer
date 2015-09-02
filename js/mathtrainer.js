@@ -317,7 +317,7 @@
 		 */
 		var setScoreText = function (timeString) {
 			if(!timeString) {
-				timeString = config.minutes + ' minute' + (config.minutes !== 1 ? 's' : '');
+				timeString = config.minutes + ' ' + (config.minutes !== 1 ? i18n.t('labels.minutes') : i18n.t('labels.minute'));
 			}
 			$('#finalScore').text(
 				i18n.t('messages.finalScore', { scoreTime: timeString, scoreTotal: stats.total, scoreSkipped: stats.skipped })
