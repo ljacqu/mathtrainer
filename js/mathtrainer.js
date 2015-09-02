@@ -385,7 +385,9 @@
 			stats.total = 0;
 			stats.skipped = 0;
 			$('#options').fadeOut(function () {
-				$('#question, #user').fadeIn();
+				$('#question, #user').fadeIn(function() {
+					$("#result").focus();
+				});
 			});
 			$('#score').fadeOut();
 			timer.start();
