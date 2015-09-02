@@ -423,7 +423,8 @@
 			}
 		});
 
-		$('#start').click(function () {
+		$("form#options").submit(function (e) {
+			e.preventDefault();
 			var hasValidOptions = trainer.options.initialize();
 			if (hasValidOptions) {
 				trainer.question.createNew();
