@@ -8,145 +8,178 @@
 		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/mathtrainer.css" />
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h1 class="i18n" data-i18n="labels.appName"></h1>
+							<em><span class="i18n" data-i18n="labels.appQuote"></span></em>
+						</div>
+						<div class="panel-body">
+
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="alert alert-success" id="score" style="display: none;">
+										<strong>
+											<div class="i18n" data-i18n="labels.timeOver"></div>
+										</strong>
+										<span id="finalScore"></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-xs-12">
+									<form class="form-horizontal" id="options">
+										<div class="form-group">
+											<div class="col-xs-12">
+												<div class="alert alert-danger" id="optionserrors" style="display: none;">
+													<span id="options_error"></span>
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-xs-12">
+												<div class="input-group">
+													<span class="input-group-addon i18n" data-i18n="labels.runFor"></span>
+													<input type="number" class="form-control" id="timerlength" value="5" min="1" max="60" />
+													<span class="input-group-addon i18n" data-i18n="labels.minutes"></span>
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-xs-12">
+												<p><span class="i18n" data-i18n="labels.createProblemsInRange"></span></p>
+											</div>
+											<div class="col-xs-12 col-sm-6">
+												<div class="input-group">
+													<span class="input-group-addon i18n" data-i18n="labels.rangeMin"></span>
+													<input type="number" class="form-control" id="rangemin" value="1" step="1" min="-9999999" max="9999999" />
+												</div>
+											</div>
+											<div class="col-xs-12 col-sm-6">
+												<div class="input-group">
+													<span class="input-group-addon i18n" data-i18n="labels.rangeMax"></span>
+													<input type="number" class="form-control" id="rangemax" value="99" step="1" min="-9999999" max="9999999" />
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-xs-12">
+												<div class="checkbox">
+													<label>
+														<input type="checkbox" id="avoidnegatives" checked="checked" />
+														<span class="i18n" data-i18n="labels.avoidNegatives"></span>
+														<small><span class="i18n" data-i18n="labels.avoidNegativesExp"></span></small>
+													</label>
+												</div>
+											</div>
+										</div>
+										<div class="form-group" id="operators">
+											<div class="col-xs-6">
+												<div class="checkbox">
+													<label>
+														<input type="checkbox" id="opadd" checked="checked" />
+														<span class="i18n"data-i18n="labels.opAdd"></span>
+													 </label>
+												</div>
+											</div>
+											<div class="col-xs-6">
+												<div class="checkbox">
+													<label>
+														<input type="checkbox" id="opsub" checked="checked" />
+														<span class="i18n"data-i18n="labels.opSub"></span>
+													 </label>
+												</div>
+											</div>
+											<div class="col-xs-6">
+												<div class="checkbox">
+													<label>
+														<input type="checkbox" id="opmul" checked="checked" />
+														<span class="i18n"data-i18n="labels.opMul"></span>
+													 </label>
+												</div>
+											</div>
+											<div class="col-xs-6">
+												<div class="checkbox">
+													<label>
+														<input type="checkbox" id="opdiv" checked="checked" />
+														<span class="i18n" data-i18n="labels.opDiv"></span>
+													 </label>
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-xs-12">
+												<button type="submit" class="btn btn-primary col-xs-12" id="start" style="display: none;">
+													<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+													<span class="i18n" data-i18n="labels.start"></span>
+												</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+
+							<div id="questions" style="display: none;">
+								<div class="row">
+									<div class="col-xs-2 text-left">
+										<big><div id="timer"></div></big>
+									</div>
+									<div class="col-xs-10 text-right">
+										<big><div id="progress"></div></big>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xs-12 text-center">
+										<h1 id="currentquestion"></h1>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xs-12 text-center">
+										<div id="useranswer">
+											<input type="number" class="form-control" id="answer" />
+											<p><small><span class="i18n" data-i18n="labels.escToClearSpaceToSkip"></span></small></p>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xs-6 text-center">
+										<button type="button" class="btn btn-info col-xs-12" id="clearquestion">
+											<span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
+											<span class="i18n" data-i18n="labels.clear"></span>
+										</button>
+									</div>
+									<div class="col-xs-6 text-center">
+										<button type="button" class="btn btn-warning col-xs-12" id="skipquestion">
+											<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+											<span class="i18n" data-i18n="labels.skip"></span>
+										</button>
+									</div>
+								</div>
+								<div class="row top-margin">
+									<div class="col-xs-12 text-center">
+									 	<button type="button" class="btn btn-danger col-xs-12" id="quittooptions">
+											<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+											<span class="i18n" data-i18n="labels.quitToOptions"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="js/i18next.min.js"></script>
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="js/jquery.countdown.min.js"></script>
 		<script type="text/javascript" src="js/mathtrainer.js"></script>
-	</head>
-	<body>
-		<div class="container-fluid">
-			<div class="panel panel-primary">
-				<div class="panel-heading">
-					<h1 class="i18n" data-i18n="labels.appName"></h1>
-					<span class="i18n" data-i18n="labels.appQuote"></span>
-				</div>
-				<div class="panel-body">
-
-					<div class="alert alert-success" id="score" style="display: none">
-						<strong class="i18n" data-i18n="labels.timeOver"></strong><br>
-						<span id="finalScore"></span>
-					</div>
-
-					<form id="options">
-						<div class="form-group">
-							<div class="alert alert-danger" id="error_wrapper" style="display: none">
-								<span id="options_error"></span>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="input-group">
-								<span class="input-group-addon i18n" data-i18n="labels.runFor"></span>
-								<input type="number" class="form-control" id="timer_length" min="1" max="60" value="5" />
-								<span class="input-group-addon i18n" data-i18n="labels.minutes">.</span>
-							</div>   
-						</div>
-						<div class="form-group">
-							<div class="input-group">
-								<span class="i18n" data-i18n="labels.problemsRange"></span>
-							</div>
-							<div class="input-group">
-								<span class="input-group-addon i18n" data-i18n="labels.rangeMin"></span>
-								<input type="number" class="form-control" id="min" value="1" step="1" min="-9999999" max="9999999" />
-							</div>
-							<div class="input-group">
-								<span class="input-group-addon i18n" data-i18n="labels.rangeMax"></span>
-								<input type="number" class="form-control" id="max" value="99" step="1" min="-9999999" max="9999999" />
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="avoid_negative" checked="checked" />
-									<span class="i18n" data-i18n="labels.avoidNegatives"></span>
-									<small class="i18n" data-i18n="labels.avoidNegativesExp"></small>
-								</label>
-							</div>
-						</div>
-						<div class="form-group" id="op_wrapper">
-							<div class="checkbox">
-								<label>
-									<input type="checkbox"  id="op_add" checked="checked" />
-									<span class="i18n"data-i18n="labels.opAdd"></span>
-								 </label>
-							</div>
-							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="op_sub" checked="checked" />
-									<span class="i18n"data-i18n="labels.opSub"></span>
-								 </label>
-							</div>
-							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="op_mul" checked="checked" />
-									<span class="i18n"data-i18n="labels.opMul"></span>
-								 </label>
-							</div>
-							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="op_div" checked="checked" />
-									<span class="i18n" data-i18n="labels.opDiv"></span>
-								 </label>
-							</div>
-						</div>
-						<div class="form-group">
-							<button type="submit" class="btn btn-primary col-xs-12" id="start" style="display: none">
-								<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-								<span class="i18n" data-i18n="labels.start"></span>
-							</button>
-						</div>
-					</form>
-
-					<div id="question" style="display: none">
-						<div class="row">
-							<div class="col-xs-2">
-								<big><div id="timer"></div></big>
-							</div>
-							<div class="col-xs-10 text-right">
-								<big><div id="progress"></div></big>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-xs-12 text-center">
-								<h1 id="question_math"></h1>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-xs-12 text-center">
-								<div id="user">
-									<input type="number" class="form-control" id="result" />
-									<p><small class="i18n" data-i18n="labels.skipClearQuestion"></small></p>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-xs-6 text-center">
-								<button type="button" class="btn btn-info col-xs-12" id="clear_question">
-									<span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
-									<span class="i18n" data-i18n="labels.clear"></span>
-								</button>
-							</div>
-							<div class="col-xs-6 text-center">
-								<button type="button" class="btn btn-warning col-xs-12" id="skip_question">
-									<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-									<span class="i18n" data-i18n="labels.skip"></span>
-								</button>
-							</div>
-						</div>
-						<br>
-						<div class="row">
-							<div class="col-xs-12 text-center">
-							   <button type="button" class="btn btn-danger col-xs-12" id="quit_to_options">
-								   	<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-									<span class="i18n" data-i18n="labels.quitToOptions"></span>
-								</button>
-							</div>
-						</div>
-					</div>
-					
-				</div>
-			</div>
-		</div>
 	</body>
 </html>

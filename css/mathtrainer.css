@@ -1,16 +1,12 @@
+.container {
+	padding-top: 15px;
+}
+
 .input-group-addon {
 	min-width: 80px;
 	text-align: left;
 }
 
-.container-fluid {
-	padding-top: 15px;
-}
-
-input.optionerror {
-	border-color: #a94442;
-}
-
-div.optionerror {
-	border: 1px solid #a94442;
+.top-margin {
+	margin-top: 20px;
 }

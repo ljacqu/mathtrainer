@@ -82,8 +82,8 @@
 		 * @param {String} sign The sign symbol of the operator used in the question
 		 */
 		var updateQuestionText = function (sign) {
-			$('#result').val('');
-			$('#question_math').text(question.a + '\xA0' + sign + '\xA0' +
+			$('#answer').val('');
+			$('#currentquestion').text(question.a + '\xA0' + sign + '\xA0' +
 				question.b);
 			$('#progress').text(i18n.t('messages.score', {total: stats.total, skipped: stats.skipped}));
 		};
@@ -127,7 +127,7 @@
 		 * is the case.
 		 */
 		var verifyAndContinue = function () {
-			var userResult = parseInt($('#result').val());
+			var userResult = parseInt($('#answer').val());
 			if (!isNaN(userResult) && userResult === question.result) {
 				++stats.total;
 				correctAudio.currentTime = 0;
@@ -165,7 +165,7 @@
 				errorDiv.append(message);
 				$('#options_error').append(errorDiv);
 				$.each(ids, function (key, value) {
-					$('#' + value).addClass('optionerror');
+					$('#' + value).closest(".form-group").addClass('has-error');
 				});
 			};
 			/**
@@ -180,7 +180,7 @@
 			 */
 			var reset = function () {
 				$('#options_error').text('');
-				$('.optionerror').removeClass('optionerror');
+				$('.has-error').removeClass('has-error');
 				errorAdded = false;
 			};
 
@@ -202,8 +202,8 @@
 				var tmp = max;
 				max = min;
 				min = tmp;
-				$('#min').val(min);
-				$('#max').val(max);
+				$('#rangemin').val(min);
+				$('#rangemax').val(max);
 			}
 			config.min = min;
 			config.max = max;
@@ -214,22 +214,22 @@
 		 */
 		var initializeMinAndMax = function () {
 
-			var min = parseInt($('#min').val());
-			var max = parseInt($('#max').val());
+			var min = parseInt($('#rangemin').val());
+			var max = parseInt($('#rangemax').val());
 			var hasErrors = false;
 
 			if (isNaN(min) || min < -9999999 || min > 9999999) {
-				error.add(['min'], i18n.t('errors.rangeMinInvalid', {min: -9999999, max: 9999999}));
+				error.add(['rangemin'], i18n.t('errors.rangeMinInvalid', {min: -9999999, max: 9999999}));
 				hasErrors = true;
 			}
 
 			if (isNaN(max) || max < -9999999 || max > 9999999) {
-				error.add(['max'], i18n.t('errors.rangeMaxInvalid', {min: -9999999, max: 9999999}));
+				error.add(['rangemax'], i18n.t('errors.rangeMaxInvalid', {min: -9999999, max: 9999999}));
 				hasErrors = true;
 			}
 
 			if (!hasErrors && min >= max) {
-				error.add(['min', 'max'], i18n.t('errors.rangeIntervalInvalid'));
+				error.add(['rangemin', 'rangemax'], i18n.t('errors.rangeIntervalInvalid'));
 				hasErrors = true;
 			}
 
@@ -242,9 +242,9 @@
 		 * Processes timer minutes field.
 		 */
 		var initializeMinutes = function () {
-			var timerValue = parseInt($('#timer_length').val());
+			var timerValue = parseInt($('#timerlength').val());
 			if (isNaN(timerValue) || timerValue <= 0 || timerValue > 60) {
-				error.add(['timer_length'], i18n.t('errors.minutesInvalid', {min: 1, max: 60}));
+				error.add(['timerlength'], i18n.t('errors.minutesInvalid', {min: 1, max: 60}));
 			} else {
 				config.minutes = timerValue;
 			}
@@ -259,13 +259,13 @@
 			var inputOperators = [];
 			for (var key in operators) {
 				if (operators.hasOwnProperty(key)) {
-					if ($('#op_' + key).is(':checked')) {
+					if ($('#op' + key).is(':checked')) {
 						inputOperators.push(key);
 					}
 				}
 			}
 			if (inputOperators.length === 0) {
-				error.add(['op_wrapper'], i18n.t('errors.noOperators'));
+				error.add(['operators'], i18n.t('errors.noOperators'));
 			} else {
 				config.operators = inputOperators;
 			}
@@ -276,7 +276,7 @@
 		 */
 		var initializeAvoidNegatives = function () {
 			if (config.min >= 0) {
-				config.avoidNegatives = $('#avoid_negative').is(':checked');
+				config.avoidNegatives = $('#avoidnegatives').is(':checked');
 			} else {
 				config.avoidNegatives = false;
 			}
@@ -293,10 +293,10 @@
 			initializeMinAndMax();
 			initializeOperators();
 			if (error.hasErrors()) {
-				$('#error_wrapper').show();
+				$('#optionserrors').show();
 				return false;
 			}
-			$('#error_wrapper').hide();
+			$('#optionserrors').hide();
 			initializeAvoidNegatives();
 			return true;
 		};
@@ -331,8 +331,8 @@
 		 */
 		var showScore = function (timeString) {
 			setScoreText(timeString);
-			$('#user').fadeOut(50, function () {
-				$('#question').fadeOut(function () {
+			$('#useranswer').fadeOut(50, function () {
+				$('#questions').fadeOut(function () {
 					$('#score, #options').fadeIn();
 				});
 			});
@@ -385,8 +385,8 @@
 			stats.total = 0;
 			stats.skipped = 0;
 			$('#options').fadeOut(function () {
-				$('#question, #user').fadeIn(function() {
-					$("#result").focus();
+				$('#questions, #useranswer').fadeIn(function() {
+					$("#answer").focus();
 				});
 			});
 			$('#score').fadeOut();
@@ -413,7 +413,7 @@
 			$(this).val(!isNaN(value) ? value : $(this).prop("defaultValue"));
 		});
 
-		$('#result').keyup(function (e) {
+		$('#answer').keyup(function (e) {
 			if (e.which === 32) {
 				trainer.question.skip();
 			} else if (e.which === 27) {
@@ -432,17 +432,17 @@
 			}
 		});
 
-		$('#skip_question').click(function () {
+		$('#skipquestion').click(function () {
 			trainer.question.skip();
-			$("#result").focus();
+			$("#answer").focus();
 		});
 
-		$('#clear_question').click(function () {
-			$("#result").val('');
-			$("#result").focus();
+		$('#clearquestion').click(function () {
+			$("#answer").val('');
+			$("#answer").focus();
 		});
 
-		$('#quit_to_options').click(function () {
+		$('#quittooptions').click(function () {
 			$('#timer').countdown('stop');
 		});
 
