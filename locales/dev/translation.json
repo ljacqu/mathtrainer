@@ -1,0 +1,35 @@
+{
+	"labels": {
+		"appName"               : "Mental Math Trainer",
+		"appQuote"              : "Train your mental arithmetic skills",
+		"timeOver"              : "Time Over",
+		"runFor"                : "Run for",
+		"minute"                : "minute",
+		"minutes"               : "minutes",
+		"createProblemsInRange" : "Create problems with numbers in the following range:",
+		"rangeMin"              : "Min",
+		"rangeMax"              : "Max",
+		"avoidNegatives"        : "Avoid negative results for subtraction?",
+		"avoidNegativesExp"     : "(Only applicable if min and max aren't negative)",
+		"opAdd"                 : "Addition",
+		"opSub"                 : "Subtraction",
+		"opMul"                 : "Multiplication",
+		"opDiv"                 : "Division",
+		"start"                 : "Start",
+		"escToClearSpaceToSkip" : "esc to clear / space to skip",
+		"clear"                 : "Clear",
+		"skip"                  : "Skip",
+		"quitToOptions"         : "Quit to Options"
+	},
+	"messages": {
+		"score" : "__total__ answered, __skipped__ skipped",
+		"finalScore" : "In __scoreTime__, you have solved __scoreTotal__ problems (skipped __scoreSkipped__)"
+	},
+	"errors": {
+		"minutesInvalid"	   : "The \"minutes\" field must be a valid integer between __min__ and __max__",
+		"rangeMinInvalid"      : "The \"Min\" field must be a valid number between __min__ and __max__",
+		"rangeMaxInvalid"      : "The \"Max\" field must be a valid number between __min__ and __max__",
+		"rangeIntervalInvalid" : "The \"Min\" field must be less than \"Max\" field",
+		"noOperators"          : "Select at least one operator"
+	}
+}

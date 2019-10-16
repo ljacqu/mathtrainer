@@ -1,0 +1,35 @@
+{
+	"labels": {
+		"appName"               : "Treinador de Cálculo Mental",
+		"appQuote"              : "Treine suas habilidades de cálculo mental",
+		"timeOver"              : "Tempo Esgotado",
+		"runFor"                : "Treinar por",
+		"minute"                : "minuto",
+		"minutes"               : "minutos",
+		"createProblemsInRange" : "Criar problemas com números na seguinte faixa:",
+		"rangeMin"              : "Mínimo",
+		"rangeMax"              : "Máximo",
+		"avoidNegatives"        : "Evitar resultados negativos para subtração?",
+		"avoidNegativesExp"     : "(Apenas se os valores mínimo e máximo não forem negativos)",
+		"opAdd"                 : "Adição",
+		"opSub"                 : "Subtração",
+		"opMul"                 : "Multiplicação",
+		"opDiv"                 : "Divisão",
+		"start"                 : "Iniciar",
+		"escToClearSpaceToSkip" : "esc para limpar / espaço para pular",
+		"clear"                 : "Limpar",
+		"skip"                  : "Pular",
+		"quitToOptions"         : "Voltar para as Opções"
+	},
+	"messages": {
+		"score" : "__total__ respondidos, __skipped__ pulados",
+		"finalScore" : "Em __scoreTime__, você respondeu __scoreTotal__ problemas (__scoreSkipped__ pulados)"
+	},
+	"errors": {
+		"minutesInvalid"	   : "O campo \"minutos\" deve ser um número inteiro entre __min__ e __max__",
+		"rangeMinInvalid"      : "O campo \"mínimo\" deve ser um número inteiro entre __min__ e __max__",
+		"rangeMaxInvalid"      : "O campo \"máximo\" deve ser um número inteiro entre __min__ e __max__",
+		"rangeIntervalInvalid" : "O campo \"mínimo\" deve ser menor que o campo \"máximo\"",
+		"noOperators"          : "Selecione pelo menos uma operação"
+	}
+}

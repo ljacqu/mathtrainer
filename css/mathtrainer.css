@@ -1,0 +1,12 @@
+.container {
+	padding-top: 15px;
+}
+
+.input-group-addon {
+	min-width: 80px;
+	text-align: left;
+}
+
+.top-margin {
+	margin-top: 20px;
+}
