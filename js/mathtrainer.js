@@ -45,11 +45,6 @@
 		result: 0
 	};
 
-	/**
-	 * Audio to play on correct answers.
-	 */
-	var correctAudio = new Audio('correct.mp3');
-
 	/** Trainer logic. */
 	var trainer = {};
 
@@ -130,8 +125,6 @@
 			var userResult = parseInt($('#answer').val());
 			if (!isNaN(userResult) && userResult === question.result) {
 				++stats.total;
-				correctAudio.currentTime = 0;
-				correctAudio.play();
 				createNew();
 			}
 		};
@@ -156,7 +149,7 @@
 			var errorAdded = false;
 			/**
 			 * Displays an error message about a configuration.
-			 * @param {String} id The ID of the field/checkbox the error is about
+			 * @param {String} ids The IDs of the fields/checkboxes the error is for
 			 * @param {String} message The message to output
 			 */
 			var add = function (ids, message) {
