@@ -245,8 +245,8 @@
 
 		/**
 		 * Processes the operators the user wants to use for the training session.
-		 * Note that the checkboxes in the HTML are expected to have ID #op_{name},
-		 * where {name} is the operator abbreviation, e.g. #op_add or #op_div.
+		 * Note that the checkboxes in the HTML are expected to have ID #op{name},
+		 * where {name} is the operator abbreviation, e.g. #opadd or #opdiv.
 		 */
 		var initializeOperators = function () {
 			var inputOperators = [];
